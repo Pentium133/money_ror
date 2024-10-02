@@ -40,6 +40,11 @@ group :development, :test do
   gem "binding_of_caller"
   gem "rubocop", require: false
 
+  gem "factory_bot_rails"
+  gem "faker"
+  gem "rspec-rails", "~> 7.0.0"
+  gem "shoulda-matchers", "~> 6.0"
+
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
 end
