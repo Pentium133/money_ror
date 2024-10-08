@@ -28,4 +28,30 @@ RSpec.describe Account, type: :model do
       expect(account.errors[:name]).to include("can't be blank")
     end
   end
+
+  describe 'enum account_type' do
+    it 'defines account types' do
+      expect(Account.account_types.keys).to contain_exactly('asset', 'liability', 'income', 'expense')
+    end
+
+    it 'can set account_type to asset' do
+      account = Account.new(name: 'Cash', account_type: :asset)
+      expect(account.asset?).to be true
+    end
+
+    it 'can set account_type to liability' do
+      account = Account.new(name: 'Credit', account_type: :liability)
+      expect(account.liability?).to be true
+    end
+
+    it 'can set account_type to income' do
+      account = Account.new(name: 'Salary', account_type: :income)
+      expect(account.income?).to be true
+    end
+
+    it 'can set account_type to expense' do
+      account = Account.new(name: 'Food', account_type: :expense)
+      expect(account.expense?).to be true
+    end
+  end
 end

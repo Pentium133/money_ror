@@ -13,4 +13,6 @@ class Account < ApplicationRecord
   has_many :child_accounts, class_name: "Account", foreign_key: "parent_id"
 
   validates :name, presence: true
+
+  enum :account_type, { asset: 0, liability: 1, income: 2, expense: 3 }
 end
