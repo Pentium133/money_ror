@@ -16,21 +16,32 @@ RSpec.describe MoneyTransaction, type: :model do
   end
 
   describe 'validations' do
+    let(:transaction) { MoneyTransaction.create!(transaction_date: Date.today, description: 'Test transaction') }
+
     it 'is valid with a transaction_date and description' do
-      transaction = MoneyTransaction.new(transaction_date: Date.today, description: 'Test transaction')
       expect(transaction).to be_valid
     end
 
     it 'is not valid without a transaction_date' do
-      transaction = MoneyTransaction.new(transaction_date: nil)
+      transaction.transaction_date = nil
       expect(transaction).to_not be_valid
       expect(transaction.errors[:transaction_date]).to include("can't be blank")
     end
 
     it 'is not valid without a description' do
-      transaction = MoneyTransaction.new(description: nil)
+      transaction.description = nil
       expect(transaction).to_not be_valid
       expect(transaction.errors[:description]).to include("can't be blank")
+    end
+
+    it 'is not valid if the transaction is not balanced' do
+      account = Account.create!(name: 'Test account', account_type: 'asset')
+
+      transaction.entries.create!(amount: -50.0, account_id: account.id)
+      transaction.entries.build(amount: 30.0, account_id: account.id)
+
+      expect(transaction).to_not be_valid
+      expect(transaction.errors[:base]).to include('The transaction is not balanced. Total amount must be zero.')
     end
   end
 end

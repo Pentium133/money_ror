@@ -13,8 +13,18 @@ class MoneyTransaction < ApplicationRecord
 
   validates :transaction_date, presence: true
   validates :description, presence: true
+  validate :entries_must_balance
+
 
   def balanced?
     entries.sum(:amount) == 0
+  end
+
+  private
+
+  def entries_must_balance
+    if !balanced?
+      errors.add(:base, "The transaction is not balanced. Total amount must be zero.")
+    end
   end
 end
