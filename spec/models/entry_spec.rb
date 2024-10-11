@@ -22,5 +22,30 @@
 require 'rails_helper'
 
 RSpec.describe Entry, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe 'associations' do
+    it { should belong_to(:money_transaction) }
+    it { should belong_to(:account) }
+  end
+
+  describe 'validations' do
+    let(:transaction) { MoneyTransaction.create!(transaction_date: Date.today, description: 'Test transaction') }
+    let(:account) { Account.create!(name: 'Test account', account_type: 'asset') }
+
+    it 'is valid with an amount and account_id' do
+      entry = Entry.new(amount: 50.0, account_id: account.id, money_transaction: transaction)
+      expect(entry).to be_valid
+    end
+
+    it 'is not valid without an amount' do
+      entry = Entry.new(amount: nil, account_id: account.id, money_transaction: transaction)
+      expect(entry).to_not be_valid
+      expect(entry.errors[:amount]).to include("can't be blank")
+    end
+
+    it 'is not valid without an account_id' do
+      entry = Entry.new(amount: 50.0, account_id: nil, money_transaction: transaction)
+      expect(entry).to_not be_valid
+      expect(entry.errors[:account]).to include("must exist")
+    end
+  end
 end

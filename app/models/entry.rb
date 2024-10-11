@@ -22,4 +22,6 @@
 class Entry < ApplicationRecord
   belongs_to :money_transaction
   belongs_to :account
+
+  validates :amount, presence: true
 end
