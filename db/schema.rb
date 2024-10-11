@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_08_151134) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_11_105106) do
   create_table "accounts", force: :cascade do |t|
     t.string "name"
     t.integer "account_type"
@@ -52,6 +52,25 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_08_151134) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "entries", force: :cascade do |t|
+    t.integer "money_transaction_id", null: false
+    t.integer "account_id", null: false
+    t.decimal "amount", precision: 10, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_entries_on_account_id"
+    t.index ["money_transaction_id"], name: "index_entries_on_money_transaction_id"
+  end
+
+  create_table "money_transactions", force: :cascade do |t|
+    t.date "transaction_date"
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "entries", "accounts"
+  add_foreign_key "entries", "money_transactions"
 end
